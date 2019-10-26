@@ -2,15 +2,14 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 public class Deque<Item> implements Iterable<Item> {
-
-    private Node first = null;
-    private int length = 0;
-
     private class Node {
         Item item;
         Node next;
         Node previous;
     }
+
+    private Node first = null;
+    private int length = 0;
 
     // construct an empty deque
     public Deque() {
@@ -18,7 +17,7 @@ public class Deque<Item> implements Iterable<Item> {
 
     // is the deque empty?
     public boolean isEmpty() {
-        return first == null;
+        return length == 0;
     }
 
     // return the number of items on the deque
@@ -70,7 +69,7 @@ public class Deque<Item> implements Iterable<Item> {
 
             node.next = first;
             first.previous = node;
-            
+
             node.previous = oldPrevious;
             oldPrevious.next = node;
         }
@@ -107,7 +106,7 @@ public class Deque<Item> implements Iterable<Item> {
         Node oldLast = first.previous;
         first.previous = oldLast.previous;
         oldLast.previous.next = first;
-        
+
         // fst.next.previous = oldFirst.previous;
         // first.previous.next = oldFirst.next;
         // first = oldFirst.next;
@@ -131,10 +130,14 @@ public class Deque<Item> implements Iterable<Item> {
         }
 
         public void remove() {
-            throw new UnsupportedOperationException();           
+            throw new UnsupportedOperationException();
         }
 
         public Item next() {
+            if (iteratorItems <= 0) {
+                throw new NoSuchElementException();
+            }
+
             Item item = current.item;
             current = current.next;
             iteratorItems--;
@@ -156,7 +159,6 @@ public class Deque<Item> implements Iterable<Item> {
             System.out.print(s + "  ");
         }
         System.out.println();
-
 
         deque.addFirst("start1");
         deque.addFirst("start2");
@@ -189,14 +191,12 @@ public class Deque<Item> implements Iterable<Item> {
         }
         System.out.println();
 
-
         System.out.println("Remove from end: " + deque.removeLast());
         System.out.println("Remove from end: " + deque.removeLast());
         for (String s : deque) {
             System.out.print(s + "  ");
         }
         System.out.println();
-
 
         deque.addFirst("start5");
         deque.addLast("end5");
@@ -204,5 +204,19 @@ public class Deque<Item> implements Iterable<Item> {
             System.out.print(s + "  ");
         }
         System.out.println();
+
+        Deque<Integer> d = new Deque<Integer>();
+        d.addFirst(1);
+        System.out.println("Remove from end: " + d.removeLast());
+        d.addFirst(3);
+        System.out.println("Remove from end: " + d.removeLast());
+
+
+        Deque<Integer> deque1 = new Deque<Integer>();
+        deque1.addFirst(1);
+        deque1.isEmpty();
+        deque1.removeFirst();
+        deque1.addLast(5);
+        System.out.println("Remove from end: " +deque1.removeFirst());
     }
 }
