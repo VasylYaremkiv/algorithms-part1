@@ -3,7 +3,7 @@ import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.In;
 
 
-public class BruteCollinearPoints {
+public class FastCollinearPoints {
     private final Point[] points;
     private final int length;
     private LineSegment[] segments;
@@ -11,14 +11,14 @@ public class BruteCollinearPoints {
 
  
     // finds all line segments containing 4 points
-    public BruteCollinearPoints(Point[] points) {
+    public FastCollinearPoints(Point[] points) {
         if (points == null) {
-            throw new java.lang.IllegalArgumentException();
+            throw new IllegalArgumentException();
         }
 
         for (int i = 0; i < points.length; i++) {
             if (points[i] == null) {
-                throw new java.lang.IllegalArgumentException();
+                throw new IllegalArgumentException();
             }
         }
 
@@ -27,7 +27,7 @@ public class BruteCollinearPoints {
         Point previousPoint = this.points[0];
         for (int i = 1; i < points.length; i++) {
             if (previousPoint.compareTo(this.points[i]) == 0) {
-                throw new java.lang.IllegalArgumentException();
+                throw new IllegalArgumentException();
             }
             previousPoint = this.points[i];
         }
@@ -91,20 +91,16 @@ public class BruteCollinearPoints {
         }
     }
 
-    // public void print() {
-    //     for (int i = 0; i < this.length; i++) {
-    //         System.out.println(this.points[i].toString());
-    //     }
-    // }
+    public void print() {
+        for (int i = 0; i < this.length; i++) {
+            System.out.println(this.points[i].toString());
+        }
+    }
     public int numberOfSegments() {       // the number of line segments
         return this.lengthSegments;
     }
  
     public LineSegment[] segments() {
-        // if (this.length < 4) {
-        //     LineSegment[] empty = {};
-        //     return empty;
-        // }
         return Arrays.copyOfRange(this.segments, 0, this.lengthSegments);
     }
 
@@ -112,12 +108,12 @@ public class BruteCollinearPoints {
         Point[] points = new Point[6];
         points[0] = new Point(190, 100);
         points[1] = new Point(180, 100);
-        points[2] = new Point(15643, 100);
-        points[3] = new Point(15643, 100);
+        points[2] = new Point(320, 100);
+        points[3] = new Point(210, 100);
         points[4] = new Point(123, 56);
         points[5] = new Point(140, 100);
-        BruteCollinearPoints bcp = new BruteCollinearPoints(points);
-        // bcp.print();
+        FastCollinearPoints bcp = new FastCollinearPoints(points);
+        bcp.print();
         System.out.println("numberOfSegments:  " + bcp.numberOfSegments());
 
 
@@ -141,7 +137,7 @@ public class BruteCollinearPoints {
         // StdDraw.show();
 
         // // print and draw the line segments
-        // BruteCollinearPoints collinear = new BruteCollinearPoints(points);
+        // FastCollinearPoints collinear = new FastCollinearPoints(points);
         // // collinear.print();
         // System.out.println("numberOfSegments:  " + collinear.numberOfSegments());
 

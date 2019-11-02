@@ -8,8 +8,8 @@
  *
  ******************************************************************************/
 
-import java.util.Comparator;
 import edu.princeton.cs.algs4.StdDraw;
+import java.util.Comparator;
 
 public class Point implements Comparable<Point> {
 
@@ -59,14 +59,18 @@ public class Point implements Comparable<Point> {
      * @return the slope between this point and the specified point
      */
     public double slopeTo(Point that) {
+        if (this.y == that.y && this.x == that.x) {
+            return Double.NEGATIVE_INFINITY;
+        }
+
         if (this.y == that.y) {
             return 0.0;
         }
-        if (this.x == that.x && this.y < that.y) {
+        if (this.x == that.x && this.y > that.y) {
             return Double.POSITIVE_INFINITY;
         }
-        if (this.x == that.x && this.y > that.y) {
-            return Double.NEGATIVE_INFINITY; 
+        if (this.x == that.x && this.y < that.y) {
+            return Double.POSITIVE_INFINITY; 
         }
         return (double) (that.y - this.y) / (that.x - this.x);    
     }
@@ -83,6 +87,7 @@ public class Point implements Comparable<Point> {
      *         point; and a positive integer if this point is greater than the
      *         argument point
      */
+    @Override
     public int compareTo(Point that) {
         if (this.y < that.y) {
             return -1;
@@ -116,6 +121,7 @@ public class Point implements Comparable<Point> {
         public BySlope(int x, int y) {
             p = new Point(x, y);
         }
+        @Override
         public int compare(Point v, Point w) {
             double slopeV = p.slopeTo(v);
             double slopeW = p.slopeTo(w);
@@ -160,6 +166,7 @@ public class Point implements Comparable<Point> {
      *
      * @return a string representation of this point
      */
+    @Override
     public String toString() {
         /* DO NOT MODIFY */
         return "(" + x + ", " + y + ")";
@@ -171,8 +178,8 @@ public class Point implements Comparable<Point> {
     public static void main(String[] args) {
         
         Point[] points = new Point[2];
-        points[0] = new Point(1, 3);
-        points[1] = new Point(4, 1);
+        points[0] = new Point(33, 79);
+        points[1] = new Point(33, 433);
 
         System.out.println(points[0].toString() + ".compareTo(" +  points[1].toString() +") : " + points[0].compareTo(points[1]));
         System.out.println(points[0].toString() + ".slopeTo(" +  points[1].toString() +") : " + points[0].slopeTo(points[1]));
