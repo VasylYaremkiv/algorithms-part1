@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import java.util.ArrayList;
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.In;
 
@@ -6,19 +7,19 @@ import edu.princeton.cs.algs4.In;
 public class BruteCollinearPoints {
     private final Point[] points;
     private final int length;
-    private LineSegment[] segments;
+    private final ArrayList<LineSegment> segments = new ArrayList<LineSegment>();
     private int lengthSegments;
 
  
     // finds all line segments containing 4 points
     public BruteCollinearPoints(Point[] points) {
         if (points == null) {
-            throw new java.lang.IllegalArgumentException();
+            throw new IllegalArgumentException();
         }
 
         for (int i = 0; i < points.length; i++) {
             if (points[i] == null) {
-                throw new java.lang.IllegalArgumentException();
+                throw new IllegalArgumentException();
             }
         }
 
@@ -27,20 +28,16 @@ public class BruteCollinearPoints {
         Point previousPoint = this.points[0];
         for (int i = 1; i < points.length; i++) {
             if (previousPoint.compareTo(this.points[i]) == 0) {
-                throw new java.lang.IllegalArgumentException();
+                throw new IllegalArgumentException();
             }
             previousPoint = this.points[i];
         }
  
-        // this.points = points;
         this.length = points.length;
 
         this.lengthSegments = 0;
         if (this.length >= 4) {
-            this.segments = new LineSegment[this.length - 3];
             this.findLineSegements();
-        } else {
-            this.segments = new LineSegment[0];
         }
     } 
 
@@ -51,7 +48,6 @@ public class BruteCollinearPoints {
         int i = 0;
 
         for (int p = 0; p < this.length; p++) {
-            // endPoints = new Point[this.length - 3];
             for (int q = p + 1; q < this.length; q++) {
                 slopePQ = this.points[p].slopeTo(this.points[q]);
                 for (int r = q + 1; r < this.length; r++) {
@@ -60,13 +56,8 @@ public class BruteCollinearPoints {
                         for (int s = r + 1; s < this.length; s++) {
                             slopePS = this.points[p].slopeTo(this.points[s]);
                             if (slopePQ == slopePS) {
-
-                                // if (Arrays.contains()) 
-                                // System.out.println(" segement (" + slopePS + "): " + this.points[p].toString() + " -> " + this.points[s].toString());
-
                                 allSegements[i][0] = this.points[p];
                                 allSegements[i++][1] = this.points[s];
-                                // this.segments[this.lengthSegments++] = new LineSegment(this.points[p], this.points[s]);
                             }        
                         }    
                     }
@@ -77,35 +68,26 @@ public class BruteCollinearPoints {
         if (i > 0) {
             Point pp = allSegements[0][0];
             Point ps = allSegements[0][1];
-            this.segments[this.lengthSegments++] = new LineSegment(pp, ps);
-            // System.out.println(" add segement : " + pp.toString() + " -> " + ps.toString());
+            this.segments.add(new LineSegment(pp, ps));
+            this.lengthSegments++;
 
             for (int j = 1; j < i; j++) {
                 if (pp != allSegements[j][0] || ps != allSegements[j][1]) {
                     pp = allSegements[j][0];
                     ps = allSegements[j][1];
-                    this.segments[this.lengthSegments++] = new LineSegment(pp, ps);
-                    // System.out.println(" add segement : " + pp.toString() + " -> " + ps.toString());
+                    this.segments.add(new LineSegment(pp, ps));
+                    this.lengthSegments++;        
                 }
             }    
         }
     }
 
-    // public void print() {
-    //     for (int i = 0; i < this.length; i++) {
-    //         System.out.println(this.points[i].toString());
-    //     }
-    // }
     public int numberOfSegments() {       // the number of line segments
         return this.lengthSegments;
     }
  
     public LineSegment[] segments() {
-        // if (this.length < 4) {
-        //     LineSegment[] empty = {};
-        //     return empty;
-        // }
-        return Arrays.copyOfRange(this.segments, 0, this.lengthSegments);
+        return this.segments.toArray(new LineSegment[this.lengthSegments]);
     }
 
     public static void main(String[] args) {
@@ -113,11 +95,10 @@ public class BruteCollinearPoints {
         // points[0] = new Point(190, 100);
         // points[1] = new Point(180, 100);
         // points[2] = new Point(15643, 100);
-        // points[3] = new Point(15643, 100);
+        // points[3] = new Point(15643, 160);
         // points[4] = new Point(123, 56);
         // points[5] = new Point(140, 100);
         // BruteCollinearPoints bcp = new BruteCollinearPoints(points);
-        // // bcp.print();
         // System.out.println("numberOfSegments:  " + bcp.numberOfSegments());
 
 
