@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import java.util.ArrayList;
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.In;
 
@@ -6,7 +7,9 @@ import edu.princeton.cs.algs4.In;
 public class FastCollinearPoints {
     private final Point[] points;
     private final int length;
-    private LineSegment[] segments;
+    // private LineSegment[] segments;
+    private ArrayList<LineSegment> segments = new ArrayList<LineSegment>();
+
     private int lengthSegments;
 
  
@@ -38,10 +41,10 @@ public class FastCollinearPoints {
 
         this.lengthSegments = 0;
         if (this.length >= 4) {
-            this.segments = new LineSegment[this.length - 3];
+            // this.segments = new LineSegment[this.length - 3];
             this.findLineSegements();
         } else {
-            this.segments = new LineSegment[0];
+            // this.segments = new LineSegment[0];
         }
 
     } 
@@ -49,7 +52,12 @@ public class FastCollinearPoints {
 
     private void findLineSegements() {
         // double slopePQ, slopePR, slopePS;
-        Point[][] allSegements = new Point[this.length][2];
+        // Point[][] allSegements = new Point[this.length][2];
+        // Point[][] allSegementsStart = new Point[this.length][2];
+        ArrayList<Point> allSegementsStart = new ArrayList<Point>();
+        ArrayList<Point> allSegementsEnd = new ArrayList<Point>();
+        // private ArrayList<Point[2]> allSegements = new ArrayList<Point[2]>();
+
         int i = 0;
 
         for (int p = 0; p < this.length - 3; p++) {
@@ -69,9 +77,10 @@ public class FastCollinearPoints {
                     if (count >= 3) {
                         // System.out.println(" END segement (" + po.slopeTo(nextPoints[s-1]) + "): " + po.toString() + " -> " + nextPoints[s-1].toString());
                         // previousSlope = po.slopeTo(nextPoints[s - 1]);
-                        if (checkIfSegmentPresent(po, nextPoints[s - 1], allSegements, i)) {
-                            allSegements[i][0] = po;
-                            allSegements[i++][1] = nextPoints[s - 1];    
+                        if (checkIfSegmentPresent(po, nextPoints[s - 1], allSegementsStart, allSegementsEnd, i)) {
+                            allSegementsStart.add(po);
+                            allSegementsEnd.add(nextPoints[s - 1]);
+                            i++;    
                         }
                         // this.segments[this.lengthSegments++] = new LineSegment(po, nextPoints[s - 1]);
                     }
@@ -85,9 +94,10 @@ public class FastCollinearPoints {
                 // System.out.println(" END segement (" + po.slopeTo(nextPoints[nextPoints.length-1]) + "): " + po.toString() + " -> " + nextPoints[nextPoints.length - 1].toString());
                 // this.segments[this.lengthSegments++] = new LineSegment(po, nextPoints[nextPoints.length - 1]);
 
-                if (checkIfSegmentPresent(po, nextPoints[nextPoints.length - 1], allSegements, i)) {
-                    allSegements[i][0] = po;
-                    allSegements[i++][1] = nextPoints[nextPoints.length - 1];    
+                if (checkIfSegmentPresent(po, nextPoints[nextPoints.length - 1], allSegementsStart, allSegementsEnd, i)) {
+                    allSegementsStart.add(po);
+                    allSegementsEnd.add(nextPoints[nextPoints.length - 1]);
+                    i++;
                 }
 
             }
@@ -97,17 +107,18 @@ public class FastCollinearPoints {
             // Point pp = allSegements[0][0];
             // Point ps = allSegements[0][1];
             for (int a = 0; a < i; a++) {
-                this.segments[this.lengthSegments++] = new LineSegment(allSegements[a][0], allSegements[a][1]);
+                this.segments.add(new LineSegment(allSegementsStart.get(a), allSegementsEnd.get(a)));
+                this.lengthSegments++;
                 // System.out.println(" CREATE segement (" + allSegements[a][0].slopeTo(allSegements[a][1]) + "): " + allSegements[a][0].toString() + " -> " + allSegements[a][1].toString());
             }
         }
     }
 
-    private boolean checkIfSegmentPresent(Point start, Point end, Point[][] allSegements, int len) {
+    private boolean checkIfSegmentPresent(Point start, Point end, ArrayList<Point> allSegementsStart, ArrayList<Point> allSegementsEnd, int len) {
         double slope = start.slopeTo(end);
         // System.out.println(" CHECK  segement (" + start.toString() + "->" + end.toString() + ")");
         for (int i = 0; i < len; i++) {
-            if (allSegements[i][1] == end && slope == allSegements[i][0].slopeTo(allSegements[i][1])) {
+            if (allSegementsEnd.get(i) == end && slope == allSegementsStart.get(i).slopeTo(allSegementsEnd.get(i))) {
                 // System.out.println(" SAME AS  segement (" + start.toString() + "->" + end.toString() + "): " + allSegements[i][0].toString() + " -> " + allSegements[i][1].toString());
 
                 return false;
@@ -117,17 +128,17 @@ public class FastCollinearPoints {
         return true;
     }
 
-    private void print() {
-        for (int i = 0; i < this.length; i++) {
-            System.out.println(this.points[i].toString());
-        }
-    }
+    // private void print() {
+    //     for (int i = 0; i < this.length; i++) {
+    //         System.out.println(this.points[i].toString());
+    //     }
+    // }
     public int numberOfSegments() {       // the number of line segments
         return this.lengthSegments;
     }
  
     public LineSegment[] segments() {
-        return Arrays.copyOfRange(this.segments, 0, this.lengthSegments);
+        return this.segments.toArray(new LineSegment[this.lengthSegments]);
     }
 
     public static void main(String[] args) {
@@ -155,36 +166,36 @@ public class FastCollinearPoints {
         System.out.println("numberOfSegments:  " + bcp.numberOfSegments());
 
 
-        // // // read the n points from a file       
-        // In in = new In(args[0]);
-        // int n = in.readInt();
-        // Point[] points = new Point[n];
-        // for (int i = 0; i < n; i++) {
-        //     int x = in.readInt();
-        //     int y = in.readInt();
-        //     points[i] = new Point(x, y);
-        // }
+        // // read the n points from a file       
+        In in = new In(args[0]);
+        int n = in.readInt();
+        Point[] points1 = new Point[n];
+        for (int i = 0; i < n; i++) {
+            int x = in.readInt();
+            int y = in.readInt();
+            points1[i] = new Point(x, y);
+        }
 
-        // // // draw the points
-        // StdDraw.enableDoubleBuffering();
-        // StdDraw.setXscale(0, 32768);
-        // StdDraw.setYscale(0, 32768);
-        // for (Point p : points) {
-        //     p.draw();
-        // }
-        // StdDraw.show();
+        // // draw the points
+        StdDraw.enableDoubleBuffering();
+        StdDraw.setXscale(0, 32768);
+        StdDraw.setYscale(0, 32768);
+        for (Point p : points1) {
+            p.draw();
+        }
+        StdDraw.show();
 
-        // // print and draw the line segments
-        // FastCollinearPoints collinear = new FastCollinearPoints(points);
-        // // collinear.print();
-        // System.out.println("numberOfSegments:  " + collinear.numberOfSegments());
+        // print and draw the line segments
+        FastCollinearPoints collinear = new FastCollinearPoints(points1);
+        // collinear.print();
+        System.out.println("numberOfSegments:  " + collinear.numberOfSegments());
 
 
-        // for (LineSegment segment : collinear.segments()) {
-        //     System.out.println(segment);
-        //     segment.draw();
-        // }
-        // StdDraw.show();
+        for (LineSegment segment : collinear.segments()) {
+            System.out.println(segment);
+            segment.draw();
+        }
+        StdDraw.show();
 
     }
  }
