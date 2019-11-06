@@ -1,11 +1,12 @@
 import java.util.Arrays;
 import java.util.ArrayList;
-import java.util.Iterator;
+// import java.util.Iterator;
 
 public class Board {
+    private static final int FREE = 0;
+
     private final int n;
     private final int[][] tiles;
-    private final int FREE = 0;
 
     // create a board from an n-by-n array of tiles,
     // where tiles[row][col] = tile at (row, col)
@@ -25,7 +26,7 @@ public class Board {
         if (numDigits <= 1) {
             numDigits = 2;
         }
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         result.append(this.n);
         result.append("\n");
 
@@ -54,9 +55,10 @@ public class Board {
                     continue;
                 }
 
-                if (this.tiles[i][j] != position++) {
+                if (this.tiles[i][j] != position) {
                     result++;
                 }
+                position++;
             }    
         }
         return result;
@@ -104,7 +106,26 @@ public class Board {
 
     // does this board equal y?
     public boolean equals(Object y) {
-        return this.toString().equals(y.toString());
+        if (this == y) {
+            return true;
+        }
+        if (y == null || getClass() != y.getClass()) {
+            return false;
+        }
+
+        Board b = (Board) y;
+        return this.n == b.n && Arrays.deepEquals(this.tiles, b.tiles);
+
+        // if (this.n != b.n) {
+        //     return false;
+        // }
+        // for (int i = 0; i < this.n; i++) {
+        //     if (!Arrays.equals(this.tiles[i], b.tiles[i])) {
+        //         return false;
+        //     }    
+        // }
+ 
+        // return true;
     }
 
     // all neighboring boards
@@ -117,26 +138,26 @@ public class Board {
         int[][] tmpTiles;
 
         if (i > 0) {
-            tmpTiles = copyTiles(this.tiles, this. n);
+            tmpTiles = copyTiles(this.tiles, this.n);
             tmpTiles[i][j] = tmpTiles[i - 1][j];
             tmpTiles[i - 1][j] = FREE;
             result.add(new Board(tmpTiles));
         }
         if (i < this.n - 1) {
-            tmpTiles = copyTiles(this.tiles, this. n);
+            tmpTiles = copyTiles(this.tiles, this.n);
             tmpTiles[i][j] = tmpTiles[i + 1][j];
             tmpTiles[i + 1][j] = FREE;
             result.add(new Board(tmpTiles));
         }
 
         if (j > 0) {
-            tmpTiles = copyTiles(this.tiles, this. n);
+            tmpTiles = copyTiles(this.tiles, this.n);
             tmpTiles[i][j] = tmpTiles[i][j - 1];
             tmpTiles[i][j - 1] = FREE;
             result.add(new Board(tmpTiles));
         }
         if (j < this.n - 1) {
-            tmpTiles = copyTiles(this.tiles, this. n);
+            tmpTiles = copyTiles(this.tiles, this.n);
             tmpTiles[i][j] = tmpTiles[i][j + 1];
             tmpTiles[i][j + 1] = FREE;
             result.add(new Board(tmpTiles));
@@ -161,7 +182,7 @@ public class Board {
 
     // unit testing (not graded)
     public static void main(String[] args) {
-        int[][] tiles = new int[][]{
+        int[][] tiles = {
             // {0, 1, 2},
             // {3, 4, 5},
             // {6, 7, 8}
@@ -180,7 +201,7 @@ public class Board {
             System.out.println(board);
         }
 
-        int[][] tiles2 = new int[][]{
+        int[][] tiles2 = {
             // {0, 1, 2},
             // {3, 4, 5},
             // {6, 7, 8}
