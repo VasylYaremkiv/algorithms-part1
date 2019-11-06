@@ -177,7 +177,36 @@ public class Board {
 
     // a board that is obtained by exchanging any pair of tiles
     public Board twin() {
-        return new Board(this.tiles);
+        // int freeTile = findTile(FREE);
+        // int i = freeTile / this.n;
+        // int j = freeTile % this.n;
+        int[][] tmpTiles;
+
+        // if (i > 0) {
+        //     tmpTiles = copyTiles(this.tiles, this.n);
+        //     tmpTiles[i][j] = tmpTiles[i - 1][j];
+        //     tmpTiles[i - 1][j] = FREE;
+        // } else {
+        //     tmpTiles = copyTiles(this.tiles, this.n);
+        //     tmpTiles[i][j] = tmpTiles[i + 1][j];
+        //     tmpTiles[i + 1][j] = FREE;   
+        // }
+
+        tmpTiles = copyTiles(this.tiles, this.n);
+        int i;
+        if (tmpTiles[0][0] == FREE || tmpTiles[0][1] == FREE) {
+            i = tmpTiles[1][0];
+            tmpTiles[1][0] = tmpTiles[1][1];
+            tmpTiles[1][1] = i;    
+        } else {
+            i = tmpTiles[0][0];
+            tmpTiles[0][0] = tmpTiles[0][1];
+            tmpTiles[0][1] = i;    
+        }
+
+        // tmpTiles[i + 1][j] = FREE;   
+
+        return new Board(tmpTiles);
     }
 
     // unit testing (not graded)
@@ -213,6 +242,8 @@ public class Board {
         Board b2 = new Board(tiles2);
         System.out.println(b.equals(b2));      
         System.out.println(b.equals(b.twin()));      
+        System.out.println(b);      
+        System.out.println(b.twin());      
         
         
 
