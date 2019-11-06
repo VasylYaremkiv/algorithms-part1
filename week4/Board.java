@@ -1,4 +1,6 @@
 import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Board {
     private final int n;
@@ -14,11 +16,7 @@ public class Board {
             throw new IllegalArgumentException();
         }
 
-        this.tiles = new int[this.n][this.n];
-
-        for (int i = 0; i < this.n; i++) {
-            this.tiles[i] = Arrays.copyOf(tiles[i], this.n);
-        }
+        this.tiles = copyTiles(tiles, this.n);
     }
                                            
     // string representation of this board
@@ -110,14 +108,56 @@ public class Board {
     }
 
     // all neighboring boards
-    // public Iterable<Board> neighbors() {
+    public Iterable<Board> neighbors() {
+        ArrayList<Board> result = new ArrayList<Board>();
 
-    // }
+        int freeTile = findTile(FREE);
+        int i = freeTile / this.n;
+        int j = freeTile % this.n;
+        int[][] tmpTiles;
+
+        if (i > 0) {
+            tmpTiles = copyTiles(this.tiles, this. n);
+            tmpTiles[i][j] = tmpTiles[i - 1][j];
+            tmpTiles[i - 1][j] = FREE;
+            result.add(new Board(tmpTiles));
+        }
+        if (i < this.n - 1) {
+            tmpTiles = copyTiles(this.tiles, this. n);
+            tmpTiles[i][j] = tmpTiles[i + 1][j];
+            tmpTiles[i + 1][j] = FREE;
+            result.add(new Board(tmpTiles));
+        }
+
+        if (j > 0) {
+            tmpTiles = copyTiles(this.tiles, this. n);
+            tmpTiles[i][j] = tmpTiles[i][j - 1];
+            tmpTiles[i][j - 1] = FREE;
+            result.add(new Board(tmpTiles));
+        }
+        if (j < this.n - 1) {
+            tmpTiles = copyTiles(this.tiles, this. n);
+            tmpTiles[i][j] = tmpTiles[i][j + 1];
+            tmpTiles[i][j + 1] = FREE;
+            result.add(new Board(tmpTiles));
+        }
+
+        return result;
+    }
+
+    private int[][] copyTiles(int[][] sourceTiles, int length) {
+        int[][] result = new int[length][length];
+
+        for (int i = 0; i < length; i++) {
+            result[i] = Arrays.copyOf(sourceTiles[i], length);
+        }
+        return result;
+    }
 
     // a board that is obtained by exchanging any pair of tiles
-    // public Board twin() {
-
-    // }
+    public Board twin() {
+        return new Board(this.tiles);
+    }
 
     // unit testing (not graded)
     public static void main(String[] args) {
@@ -135,7 +175,10 @@ public class Board {
 
         System.out.println(b.hamming());       
         System.out.println(b.manhattan());       
-        System.out.println(b.isGoal());       
+        System.out.println(b.isGoal());           
+        for (Board board : b.neighbors()) {
+            System.out.println(board);
+        }
 
         int[][] tiles2 = new int[][]{
             // {0, 1, 2},
@@ -148,8 +191,9 @@ public class Board {
         };
         Board b2 = new Board(tiles2);
         System.out.println(b.equals(b2));      
+        System.out.println(b.equals(b.twin()));      
         
         
-        
+
     }
 }
