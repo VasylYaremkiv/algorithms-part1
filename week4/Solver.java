@@ -1,8 +1,6 @@
 import java.util.ArrayList;
 import java.util.Collections;
 
-// import edu.princeton.cs.algs4.BlackFilter;
-// import java.util.Iterator;
 // import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.MinPQ;
 
@@ -25,7 +23,6 @@ public class Solver {
     private BoardNode findNextNode(BoardNode bn, MinPQ<BoardNode> pq) {
         for (Board b : bn.board.neighbors()) {
             if (bn.parent == null || !bn.parent.board.equals(b)) {
-                // pq.insert(new Node(b, node));
                 pq.insert(new BoardNode(b, bn));
             }
         }
@@ -41,12 +38,12 @@ public class Solver {
         BoardNode bnTwin = new BoardNode(this.board.twin(), null);
 
         while (true) {
-            if(bn.board.isGoal()){
+            if (bn.board.isGoal()) {
                 break;
             }
             bn = findNextNode(bn, pq);
 
-            if(bnTwin.board.isGoal()){
+            if (bnTwin.board.isGoal()) {
                 break;
             }
             bnTwin = findNextNode(bnTwin, pqTwin);
@@ -61,131 +58,6 @@ public class Solver {
                 bn = bn.parent;
             }
         }
-
-
-        // ArrayList<Board> checkBoards = new ArrayList<Board>();
-        // checkBoards.add(this.board);
-        // // Board checkBoard = this.board;
-
-        // ArrayList<BoardNode> BoardNodes = new ArrayList<BoardNode>();
-        // BoardNodes.add(bn);
-
-
-        // while (true) {
-
-        // }
-
-
-        // do {
-        //     // pq = new MinPQ<BoardNode>();
-        //     for (Board b : bn.board.neighbors()) {
-        //         if (bn.parent == null || !bn.parent.board.equals(b)) {
-        //             // pq.insert(new Node(b, node));
-        //             pq.insert(new BoardNode(b, bn));
-        //         }
-
-        //         // if (b.equals(unsolvableBoard)) {
-        //         //     return false;
-        //         // }
-        //         // if (checkBoards.contains(b)) {
-        //         //     System.out.println("board present");
-        //         //     continue;
-        //         // }
-        //         // // if (bn.parent != null && b.equals(previousBoardNode.board)) {
-        //         // //     continue;
-        //         // // }
-        //         // pq.insert(new BoardNode(b, bn));
-        //         // checkBoards.add(b);
-
-        //         // System.out.println(board);
-        //     }
-        //     bn = pq.delMin();
-        //     BoardNodes.add(bn);
-        //     // moves++;
-        //     // previousBoardNode = bn;
-        //     // checkBoard = bn.board;
-        //     // this.boards.add(checkBoard);
-    
-        //     // moves++;
-        // } while (!bn.board.isGoal() && checkBoards.size() < 100);
-
-
-        // while (bn != null) {
-        //     // this.boards.add(previousBoardNode.board);
-        //     System.out.println(bn.board);
-        //     System.out.println("moves: " + bn.moves + " priority: " + bn.priority);
-        //     bn = bn.parent;
-        // }
-        // // for (BoardNode boardnode : pq) {
-        // //     // System.out.println(boardnode.priority);
-        // //     System.out.println("moves: " + boardnode.moves + " priority: " +boardnode.priority);
-        // //     // System.out.println(boardnode.board);
-        // // }
-
-
-        // // if (bn.board.isGoal() && true) {
-        // //     while (bn != null) {
-        // //         // this.boards.add(previousBoardNode.board);
-        // //         System.out.println(bn.board);
-        // //         bn = bn.parent;
-        // //     }    
-        // // }
-
-
-        // return true;
-
-
-
-        // MinPQ<BoardNode> pq = new MinPQ<BoardNode>();
-
-        // Board checkBoard = this.board;
-        // BoardNode previousBoardNode = new BoardNode(this.board, 0, null);
-
-        // int moves = 1;
-        // BoardNode bn;
-        // ArrayList<Board> checkBoards = new ArrayList<Board>();
-        // checkBoards.add(this.board);
-
-        // do {
-        //     // pq = new MinPQ<BoardNode>();
-        //     for (Board b : checkBoard.neighbors()) {
-        //         if (b.equals(unsolvableBoard)) {
-        //             return false;
-        //         }
-        //         if (checkBoards.contains(b)) {
-        //             System.out.println("board present");
-        //             continue;
-        //         }
-        //         if (previousBoardNode != null && b.equals(previousBoardNode.board)) {
-        //             continue;
-        //         }
-        //         pq.insert(new BoardNode(b, moves, previousBoardNode));
-        //         checkBoards.add(b);
-
-        //         // System.out.println(board);
-        //     }
-        //     bn = pq.delMin();
-        //     previousBoardNode = bn;
-        //     checkBoard = bn.board;
-        //     // this.boards.add(checkBoard);
-    
-        //     moves++;
-        // } while (!checkBoard.isGoal() && checkBoards.size() < 20);
-
-        // while (previousBoardNode.parent != null) {
-        //     this.boards.add(previousBoardNode.board);
-        //     previousBoardNode = previousBoardNode.parent;
-        // }
-
-        // System.out.println("boardnode.board:");
-
-        // for (BoardNode boardnode : pq) {
-        //     // System.out.println(boardnode.priority);
-        //     System.out.println("moves: " + boardnode.moves + " priority: " +boardnode.priority);
-        //     // System.out.println(boardnode.board);
-        // }
-
-        // return true;
     }
 
     // is the initial board solvable? (see below)
@@ -211,15 +83,8 @@ public class Solver {
         }
 
         public int compareTo(BoardNode that) {
-            // return this.priority - that.priority;
-
-            int c = (board.manhattan() + moves) - (that.board.manhattan() + that.moves);
-            if (c == 0) {
-                return board.manhattan() - that.board.manhattan();
-            }
-            return c;
+            return this.priority - that.priority;
         }
-
     }
 
     // min number of moves to solve initial board
@@ -233,6 +98,10 @@ public class Solver {
 
     // sequence of boards in a shortest solution
     public Iterable<Board> solution() {
+        if (!this.solved) {
+            return null;
+        }
+
         Collections.reverse(this.boards);
         return this.boards;
     }
