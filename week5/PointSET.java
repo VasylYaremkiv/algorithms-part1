@@ -4,7 +4,7 @@ import edu.princeton.cs.algs4.RectHV;
 import edu.princeton.cs.algs4.StdDraw;
 
 public class PointSET {
-    private SET<Point2D> set;
+    private final SET<Point2D> set;
     public PointSET() {
         this.set = new SET<Point2D>();
     }
@@ -37,8 +37,9 @@ public class PointSET {
 
     public void draw() {
         StdDraw.enableDoubleBuffering();
-        StdDraw.setXscale(0, 5);
-        StdDraw.setYscale(0, 5);
+        // StdDraw.setXscale(0, 4);
+        // StdDraw.setYscale(0, 4);
+        // StdDraw.setPenRadius(0.03);
         for (Point2D p : this.set) {
             p.draw();
         }
@@ -74,12 +75,12 @@ public class PointSET {
         }
 
         Point2D near = p;
-        Double distance;
-        Double minDistance = 0.0;
+        double distance;
+        double minDistance = 0.0;
         boolean first = true;
 
         for (Point2D cp : this.set) {
-            distance = cp.distanceTo(p);
+            distance = cp.distanceSquaredTo(p);
             if (first || distance < minDistance) {
                 minDistance = distance;
                 first = false;
@@ -92,7 +93,7 @@ public class PointSET {
     }
 
     public static void main(String[] args) {
-        Point2D points[] = {
+        Point2D[] points = {
             new Point2D(1, 2),
             new Point2D(1, 3),
             new Point2D(2, 2),
@@ -111,6 +112,6 @@ public class PointSET {
         }
 
         System.out.println(ps.nearest(new Point2D(1.02, 1.69)));
-        // ps.draw();
+        ps.draw();
     }
 }
